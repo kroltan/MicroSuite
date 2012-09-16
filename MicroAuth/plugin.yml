@@ -1,0 +1,14 @@
+name: Micro Auth
+main: br.com.eliti.kroltan.MicroAuth.MicroAuth
+version: 0.3
+commands:
+    login:
+        description: Logins with the specified password
+        usage: /login <password>
+        permission: MicroAuth.login
+        permission-message: You don't have permission to use this command
+    register:
+        description: Registers with the informed password and e-mail
+        usage: /register <password> <email>
+        permission: MicroAuth.register
+        permission-message: You don't have permission to use this command

@@ -1,0 +1,19 @@
+name: Micro Welcome
+main: br.com.eliti.kroltan.MicroWelcome.MicroWelcome
+version: 0.3
+commands:
+    motd:
+        description: Views the current Message of the Day
+        usage: /motd
+        permission: MicroWelcome.motd
+        permission-message: You don't have permission to use this command
+    rules:
+        description: Shows the server's rules
+        usage: /rules
+        permission: MicroWelcome.rules
+        permission-message: You don't have permission to use this command
+    welcome:
+        description: Change a player's login broadcast
+        usage: /welcome <player> <message>
+        permission: MicroWelcome.setwelcome
+        permisison-message: You don't have permission to use this command

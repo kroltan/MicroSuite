@@ -1,0 +1,40 @@
+# Available formatting:
+# f:k - Random changing text
+# f:l - Bold text
+# f:m - Striketrough text
+# f:n - Underlined text
+# f:o - Italic (slanted) text
+# f:r - Remove all formatting rules
+# To set text colors use f:COLOR_ID
+# Color IDs are digits 0-9 and letters a-f
+# Formatting codes reference at: http://www.minecraftwiki.net/index.php?title=Color_codes
+# Except here you can write f: instead of §, for commodity
+# 
+# Available variables:
+# %SERVER% - The server's name (set in server.properties as "motd") (ex.: Herp's Survival Server)
+# %IP% - The server's IP. (ex.: 192.168.0.1)
+# %PLAYERS% - Online player amount
+# %CAP% - The player cap of the server
+# 
+# Kit configuration:
+# ID,AMOUNT(:DATA)
+# Data is optional
+# 
+# Login broadcasts:
+# Formatting allowed, only one line, separate for each player
+motd: 
+    - f:2Welcome to f:6%SERVER%
+    - f:2Remember to read the f:a/rulesf:2!
+rules:
+    - f:a1. f:2Don't grief
+    - f:a2. f:2Don't insult players
+    - f:a3. f:2Don't spam blocks, creature eggs or chat messages
+login:
+    enabled: true
+    Kroltan: f:2Welcome f:aKroltanf:2, the creator of f:aMicroSuitef:2!
+kit:
+    enabled: true #true/false
+    items:
+        - 272,1 # 1 Stone Sword
+        - 320,8 # 8 Porkchops
+        - 383,1:54 # 1 Zombie egg

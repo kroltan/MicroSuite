@@ -1,0 +1,35 @@
+name: Micro TP
+main: br.com.eliti.kroltan.MicroTP.MicroTP
+version: 0.3
+commands:
+    tp: 
+        description: Teleports to a player
+        usage: /tp <player>
+        permission: MicroTP.teleport
+        permission-message: You don't have permission to use this command
+    setwarp:
+        description: Adds a warp in your current position
+        usage: /setwarp <name>
+        permission: MicroTP.warp.set
+        permission-message: You don't have permission to use this command
+    warp:
+        description: Teleports you to the specified warp
+        usage: /warp <name>
+        permission: MicroTP.warp.use
+        permission-message: You don't have permission to use this command
+    warplist:
+        description: Shows the available warps
+        usage: /warplist <name>
+        permission: MicroTP.warp.list
+        permission-message: You don't have permission to use this command
+    delwarp:
+        description: Removes an existing warp
+        usage: /delwarp <name>
+        permission: MicroTP.warp.remove
+        permission-message: You don't have permission to use this command
+    summon:
+        description: Teleports a player to you
+        usage: /summon <name>
+        permission: MicroTP.summon
+        permission-message: You don't have permission to use this command
+    
