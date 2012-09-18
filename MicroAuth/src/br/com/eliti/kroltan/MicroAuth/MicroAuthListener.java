@@ -26,7 +26,7 @@ public class MicroAuthListener implements Listener {
 			MicroAuth.instance.Authorize(p, false);
 		} else {
 			if (!MicroAuth.instance.isRegistered(p)) {
-				p.sendMessage(MicroAuth.MSG_HEADER+"You must register before logging in. register using "+ChatColor.GREEN+"/register <password> <email>");
+				p.sendMessage(MicroAuth.MSG_HEADER+"You must register before logging in. Register using "+ChatColor.GREEN+"/register <password> <email>");
 			}
 			if (!MicroAuth.isAuthorized(p)) {
 				p.sendMessage(MicroAuth.MSG_HEADER+"Please login by using "+ChatColor.GREEN+"/login <password>"+ChatColor.DARK_GREEN+" to continue.");
@@ -78,6 +78,7 @@ public class MicroAuthListener implements Listener {
 	@EventHandler
 	public void onPlayerActionMove(PlayerMoveEvent e) {
 		if (!MicroAuth.isAuthorized(e.getPlayer())) {
+			e.getPlayer().teleport(e.getPlayer());
 			e.setCancelled(true);
 		}
 	}

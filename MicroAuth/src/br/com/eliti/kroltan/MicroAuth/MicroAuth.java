@@ -50,6 +50,14 @@ public class MicroAuth extends JavaPlugin {
 		return false;
 	}
 	
+	
+	/**
+	 * Authorizes a player, freeing him/her of the login lock. <br>
+	 * This method doesn't validate the player's password. <br>
+	 * See <i>Authorize(Player, String)</i> for login validation.
+	 * @param p Player to authenticate
+	 * @param informLogin Whether or not display the "login successful" message to the player
+	 */
 	public void Authorize(Player p, boolean informLogin) {
 		p.setMetadata("authorized", new FixedMetadataValue(this, true));
 		if (informLogin) {
@@ -57,6 +65,15 @@ public class MicroAuth extends JavaPlugin {
 		}
 	}
 	
+	
+	/**
+	 * Authorizes a player if the provided password is correct <br>
+	 * This method validates the player's password. <br>
+	 * See <i>Authorize(Player, boolean)</i> for instant login
+	 * @param p Player to authenticate
+	 * @param password The player's password (or not), to be checked.
+	 * @return
+	 */
 	public boolean Authorize(Player p, String password) {
 		if (password.equals(config.getString("users."+p.getName()+".password").replace("'", ""))) {
 			p.setMetadata("authorized", new FixedMetadataValue(this, true));
@@ -68,32 +85,62 @@ public class MicroAuth extends JavaPlugin {
 		}
 	}
 	
-	public void Unauthorize(Player p) {
-		p.removeMetadata("authorized", this);
-	}
-	
-	public void Register(Player p, String password, String email) {
-		String username = p.getName();
-		if (!email.contains("@") || !email.contains(".")) {
-			return;
-		}
-		config.set("users."+username+".password", password);
-		config.set("users."+username+".email", email);
-		saveConfig();
-		p.sendMessage(MSG_HEADER+"You were registered with email "+ChatColor.GOLD+email);
-	}
-	
-	public boolean isRegistered(Player p) {
-		if (!config.getString("users."+p.getName()+"email").equals(null)) {
+
+	/**
+	 * Logs off a player, if he was logged in
+	 * @param p Player to logout
+	 * @return Whether the player was sucessfully logged out or not
+	 */
+	public boolean Unauthorize(Player p) {
+		if (p.hasMetadata("authorized")) {
+			p.removeMetadata("authorized", this);
 			return true;
 		}
 		return false;
 	}
-	public static boolean isAuthorized(Player p) {
-		if (p.hasMetadata("authorized")) {
-			return true;
+	
+	
+	/**
+	 * Registers a player with the informed credentials. <br>
+	 * USE WITH EXTREME CAUTION: Always check if the player is already registered.
+	 * @param p Player to register
+	 * @param password Player's password
+	 * @param email Player's email
+	 */
+	public void Register(Player p, String password, String email) {
+		if (!isRegistered(p) || isAuthorized(p)) {
+			String username = p.getName();
+			if (!email.contains("@") || !email.contains(".")) {
+				return;
+			}
+			config.set("users."+username+".password", password);
+			config.set("users."+username+".email", email);
+			saveConfig();
+			p.sendMessage(MSG_HEADER+"You were registered with email "+ChatColor.GOLD+email);
 		} else {
-			return false;
+			p.sendMessage(MSG_HEADER+"You're already registered and not logged in!");
+			p.sendMessage(MSG_HEADER+"You can change your credentials when logged in,");
+			p.sendMessage(MSG_HEADER+"Or ask the server's admin to change it for you.");
 		}
 	}
+	
+	
+	/**
+	 * Checks if the specified player is registered
+	 * @param p The player to check registration
+	 * @return The player is registered or not
+	 */
+	public boolean isRegistered(Player p) {
+		return config.isSet("users."+p.getName());
+	}
+	
+	/**
+	 * Checks if the specified player is logged in
+	 * @param p The player to check login state
+	 * @return The player's login state
+	 */
+	public static boolean isAuthorized(Player p) {
+		return p.hasMetadata("authorized");
+	}
+	
 }

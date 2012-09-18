@@ -56,13 +56,26 @@ public class MicroWelcome extends JavaPlugin {
 		return false;
 	}
 	
+	
+	/**
+	 * Welcomes a player. This function simply calls the <i>ShowMOTD</i>, <i>TryGiveStartingItems</i> and <i>LoginBroadcast</i> functions
+	 * @param player The player to welcome
+	 */
 	public void Welcome(Player player) {
-		ShowMOTD(player);
+		if (config.getString("motd.mode").equalsIgnoreCase("join")) {
+			ShowMOTD(player);
+		}
 		TryGiveStartingItems(player);
 		LoginBroadcast(player);
 	}
+	
+	
+	/**
+	 * Shows the MOTD to the specified player
+	 * @param player The player
+	 */
 	public void ShowMOTD(Player player) {
-		List<String> motd = config.getStringList("motd");
+		List<String> motd = config.getStringList("motd.message");
 		for (int i = 0; i < motd.size(); i+=1) {
 			String line = motd.get(i).replace("%SERVER%", server.getMotd()).replace("f:", "§").replace("%IP%", server.getIp())
 					.replace("%CAP%", ""+server.getMaxPlayers()).replace("%PLAYERS%", ""+server.getOnlinePlayers().length);
@@ -70,6 +83,12 @@ public class MicroWelcome extends JavaPlugin {
 		}
 		logger.info("Shown the MOTD to "+player.getDisplayName());
 	}
+	
+	
+	/**
+	 * Shows the rules to the specified player
+	 * @param player The player
+	 */
 	public void ShowRules(Player player) {
 		List<String> rules = config.getStringList("rules");
 		for (int i = 0; i < rules.size(); i+=1) {
@@ -79,6 +98,13 @@ public class MicroWelcome extends JavaPlugin {
 		}
 		logger.info("Shown the rules to "+player.getDisplayName());
 	}
+	
+	
+	/**
+	 * Tries to give the starting kit to the specifed player
+	 * @param player The player to give the items to
+	 * @return If he received the kit or not
+	 */
 	public boolean TryGiveStartingItems(Player player) {
 		if (config.getBoolean("kit.enabled")&& !config.getBoolean("kit.has."+player.getName())) {
 			List<String> kit = config.getStringList("kit.items");
@@ -102,6 +128,11 @@ public class MicroWelcome extends JavaPlugin {
 		}
 		return false;
 	}
+	
+	/**
+	 * Broadcasts to all players the join message of the specified player
+	 * @param player The player to inform
+	 */
 	public void LoginBroadcast(Player player) {
 		if (config.contains("login."+player.getName())) {
 			String message = config.getString("login."+player.getName())
@@ -118,6 +149,12 @@ public class MicroWelcome extends JavaPlugin {
 			}
 		}
 	}
+	
+	/**
+	 * Sets the login blroadcast message of the specified player
+	 * @param player The player to set the broadcast
+	 * @param message The broadcast message
+	 */
 	public void SetLoginBroadcast(Player player, String message) {
 		config.set("login."+player.getName(), message);
 		saveConfig();

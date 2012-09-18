@@ -20,11 +20,17 @@
 # ID,AMOUNT(:DATA)
 # Data is optional
 # 
+# MOTD modes:
+#     - join (Displays MOTD when the user joins)
+#     - off (Don't display the MOTD)
+# 
 # Login broadcasts:
 # Formatting allowed, only one line, separate for each player
 motd: 
-    - f:2Welcome to f:6%SERVER%
-    - f:2Remember to read the f:a/rulesf:2!
+    mode: join
+    message: 
+        - f:2Welcome to f:6%SERVER%
+        - f:2Remember to read the f:a/rulesf:2!
 rules:
     - f:a1. f:2Don't grief
     - f:a2. f:2Don't insult players
@@ -33,7 +39,7 @@ login:
     enabled: true
     Kroltan: f:2Welcome f:aKroltanf:2, the creator of f:aMicroSuitef:2!
 kit:
-    enabled: true #true/false
+    enabled: true
     items:
         - 272,1 # 1 Stone Sword
         - 320,8 # 8 Porkchops

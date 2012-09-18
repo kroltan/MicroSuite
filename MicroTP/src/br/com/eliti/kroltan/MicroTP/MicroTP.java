@@ -18,6 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Kroltan
+ *
+ */
+/**
+ * @author Kroltan
+ *
+ */
 public class MicroTP extends JavaPlugin {
 
 	String MSG_HEADER = ChatColor.GREEN+"[MicroTP] "+ChatColor.DARK_GREEN;
@@ -63,6 +71,7 @@ public class MicroTP extends JavaPlugin {
 				Player other = server.getPlayer(args[0]);
 				Player player = (Player)sender;
 				setMetadata(other, "summon_request", player, this);
+				player.sendMessage(MSG_HEADER+"Sent summon request to "+ChatColor.GOLD+other.getDisplayName());
 				other.sendMessage(MSG_HEADER+ChatColor.GOLD+player.getDisplayName()+ChatColor.DARK_GREEN+" wants to summon you. Type "+ChatColor.GREEN+"/summon accept"+ChatColor.DARK_GREEN+" to accept.");
 			} else if (args[0].equalsIgnoreCase("accept")) {
 				Player player = (Player)sender;
@@ -92,26 +101,44 @@ public class MicroTP extends JavaPlugin {
 		}
 		return false;
 	}
+	
+	
+	/**
+	 * Sets a new warp with the specified name and location. Will override if there is a warp with the same name
+	 * @param name The warp's name
+	 * @param pos The Location to set the warp at
+	 * @return Whether a warp was overriden or not
+	 */
 	public boolean addWarp(String name, Location pos) {
+		boolean had = config.isSet("warps."+name);
 		config.set("warps."+name, pos);
 		saveConfig();
-		return false;
+		return had;
 	}
+	
+	/**
+	 * Gets a existing warp's location. If it doesn't exist, returns null
+	 * @param warpName
+	 * @return The warp's Location
+	 */
 	public Location getWarpFromConfig(String warpName) {
-		Location pos = (Location) config.get("warps."+warpName);
-		if (pos != null) {
-			World w = pos.getWorld();
-			double x = pos.getX();
-			double y = pos.getY();
-			double z = pos.getZ();
-			return new Location(w, x, y, z);
+		if (config.isSet("warps."+warpName)){
+			Location pos = (Location) config.get("warps."+warpName);
+			if (pos != null) {
+				World w = pos.getWorld();
+				double x = pos.getX();
+				double y = pos.getY();
+				double z = pos.getZ();
+				return new Location(w, x, y, z);
+			}
 		}
 		return null;
 	}
-	public void setMetadata(Player player, String key, Object value, Plugin plugin){
+	
+	private void setMetadata(Player player, String key, Object value, Plugin plugin){
 		player.setMetadata(key,new FixedMetadataValue(plugin,value));
 	}
-	public Object getMetadata(Player player, String key, Plugin plugin){
+	private Object getMetadata(Player player, String key, Plugin plugin){
 		List<MetadataValue> values = player.getMetadata(key);  
 		for(MetadataValue value : values){
 			if(value.getOwningPlugin().getDescription().getName().equals(plugin.getDescription().getName())){
