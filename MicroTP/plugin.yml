@@ -1,6 +1,6 @@
 name: Micro TP
 main: br.com.eliti.kroltan.MicroTP.MicroTP
-version: 0.3
+version: 0.3b
 commands:
     tp: 
         description: Teleports to a player

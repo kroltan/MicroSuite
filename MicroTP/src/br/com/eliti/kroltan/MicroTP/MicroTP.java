@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
@@ -70,13 +71,13 @@ public class MicroTP extends JavaPlugin {
 			if (!args[0].equalsIgnoreCase("accept") && server.getPlayer(args[0]) != null) {
 				Player other = server.getPlayer(args[0]);
 				Player player = (Player)sender;
-				setMetadata(other, "summon_request", player, this);
+				setMetadata(other, "summon_request", player.getName(), this);
 				player.sendMessage(MSG_HEADER+"Sent summon request to "+ChatColor.GOLD+other.getDisplayName());
 				other.sendMessage(MSG_HEADER+ChatColor.GOLD+player.getDisplayName()+ChatColor.DARK_GREEN+" wants to summon you. Type "+ChatColor.GREEN+"/summon accept"+ChatColor.DARK_GREEN+" to accept.");
 			} else if (args[0].equalsIgnoreCase("accept")) {
 				Player player = (Player)sender;
 				if (getMetadata(player, "summon_request", this) != null) {
-					Player caller = (Player)getMetadata(player, "summon_request", this);
+					Player caller = (Player)server.getPlayer(getMetadata(player, "summon_request", this).toString());
 					player.teleport(caller);
 					player.sendMessage(MSG_HEADER+"Summon complete.");
 					caller.sendMessage(MSG_HEADER+"Summon complete.");
@@ -135,11 +136,11 @@ public class MicroTP extends JavaPlugin {
 		return null;
 	}
 	
-	private void setMetadata(Player player, String key, Object value, Plugin plugin){
-		player.setMetadata(key,new FixedMetadataValue(plugin,value));
+	private void setMetadata(Metadatable metadatable, String key, Object value, Plugin plugin){
+		metadatable.setMetadata(key,new FixedMetadataValue(plugin,value));
 	}
-	private Object getMetadata(Player player, String key, Plugin plugin){
-		List<MetadataValue> values = player.getMetadata(key);  
+	private Object getMetadata(Metadatable metadatable, String key, Plugin plugin){
+		List<MetadataValue> values = metadatable.getMetadata(key);  
 		for(MetadataValue value : values){
 			if(value.getOwningPlugin().getDescription().getName().equals(plugin.getDescription().getName())){
 				return value.value();

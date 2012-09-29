@@ -20,6 +20,7 @@ public class MicroWelcome extends JavaPlugin {
 	Logger logger;
 	Server server;
 	FileConfiguration config;
+	public String motdMode = "join";
 	
 	@Override
 	public void onEnable() {
@@ -27,6 +28,7 @@ public class MicroWelcome extends JavaPlugin {
 		server = getServer();
 		config = getConfig();
 		saveDefaultConfig();
+		motdMode = config.getString("motd.mode");
 		server.getPluginManager().registerEvents(new MicroWelcomeListener(), this);
 		instance = this;
 		logger.info("MicroWelcome has been enabled");
@@ -40,7 +42,7 @@ public class MicroWelcome extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("motd") && sender instanceof Player) {
-			ShowMOTD((Player)sender);
+			ShowMOTD((Player)sender, true);
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("rules") && sender instanceof Player) {
 			ShowRules((Player)sender);
@@ -63,10 +65,12 @@ public class MicroWelcome extends JavaPlugin {
 	 */
 	public void Welcome(Player player) {
 		if (config.getString("motd.mode").equalsIgnoreCase("join")) {
-			ShowMOTD(player);
+			ShowMOTD(player, true);
 		}
 		TryGiveStartingItems(player);
-		LoginBroadcast(player);
+		if (config.getBoolean("login.enabled")) {
+			LoginBroadcast(player);
+		}
 	}
 	
 	
@@ -74,14 +78,26 @@ public class MicroWelcome extends JavaPlugin {
 	 * Shows the MOTD to the specified player
 	 * @param player The player
 	 */
-	public void ShowMOTD(Player player) {
-		List<String> motd = config.getStringList("motd.message");
-		for (int i = 0; i < motd.size(); i+=1) {
-			String line = motd.get(i).replace("%SERVER%", server.getMotd()).replace("f:", "§").replace("%IP%", server.getIp())
-					.replace("%CAP%", ""+server.getMaxPlayers()).replace("%PLAYERS%", ""+server.getOnlinePlayers().length);
-			player.sendMessage(line);
+	public void ShowMOTD(Player player, boolean force) {
+		if (player.hasMetadata("noMOTD") && !force) {
+			List<String> motd = config.getStringList("motd.message");
+			for (int i = 0; i < motd.size(); i+=1) {
+				String line = motd.get(i).replace("%SERVER%", server.getMotd()).replace("f:", "§").replace("%IP%", server.getIp())
+						.replace("%CAP%", ""+server.getMaxPlayers()).replace("%PLAYERS%", ""+server.getOnlinePlayers().length);
+				player.sendMessage(line);
+			}
+			player.removeMetadata("noMOTD", this);
+			logger.info("Shown the MOTD to "+player.getDisplayName());
+		} else if (force) {
+			List<String> motd = config.getStringList("motd.message");
+			for (int i = 0; i < motd.size(); i+=1) {
+				String line = motd.get(i).replace("%SERVER%", server.getMotd()).replace("f:", "§").replace("%IP%", server.getIp())
+						.replace("%CAP%", ""+server.getMaxPlayers()).replace("%PLAYERS%", ""+server.getOnlinePlayers().length);
+				player.sendMessage(line);
+			}
+			player.removeMetadata("noMOTD", this);
+			logger.info("Shown the MOTD to "+player.getDisplayName());
 		}
-		logger.info("Shown the MOTD to "+player.getDisplayName());
 	}
 	
 	
@@ -138,15 +154,7 @@ public class MicroWelcome extends JavaPlugin {
 			String message = config.getString("login."+player.getName())
 					.replace("%SERVER%", server.getMotd()).replace("f:", "§").replace("%IP%", server.getIp()).replace("%HIM%", player.getDisplayName())
 					.replace("%CAP%", ""+server.getMaxPlayers()).replace("%PLAYERS%", ""+server.getOnlinePlayers().length);
-			Player[] ps = getServer().getOnlinePlayers();
-			if (ps.length > 1 && config.getBoolean("login.enabled")) {
-				for (int i = 0; i < ps.length; i+=1) {
-					Player p = ps[i];
-					if (!p.equals(player)) {
-						p.sendMessage(message);
-					}
-				}
-			}
+			server.broadcastMessage(message);
 		}
 	}
 	

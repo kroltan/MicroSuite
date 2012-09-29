@@ -22,6 +22,7 @@
 # 
 # MOTD modes:
 #     - join (Displays MOTD when the user joins)
+#     - auth (displays the MOTD when the user logins [REQUIRES MicroAuth])
 #     - off (Don't display the MOTD)
 # 
 # Login broadcasts:
