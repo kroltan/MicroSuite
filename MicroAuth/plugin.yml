@@ -1,6 +1,6 @@
 name: Micro Auth
 main: br.com.eliti.kroltan.MicroAuth.MicroAuth
-version: 0.3
+version: 0.4
 commands:
     login:
         description: Logins with the specified password

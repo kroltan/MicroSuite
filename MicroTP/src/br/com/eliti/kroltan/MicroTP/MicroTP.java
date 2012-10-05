@@ -99,6 +99,9 @@ public class MicroTP extends JavaPlugin {
 			addWarp(args[0], null);
 			sender.sendMessage(MSG_HEADER+"Deleted warp '"+ChatColor.GOLD+args[0]+ChatColor.DARK_GREEN+"'.");
 			return true;
+		} else if (cmd.getName().equalsIgnoreCase("spawn") && sender instanceof Player) {
+			Player p = (Player)sender;
+			p.teleport(p.getWorld().getSpawnLocation());
 		}
 		return false;
 	}

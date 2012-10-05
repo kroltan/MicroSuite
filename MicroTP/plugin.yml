@@ -1,6 +1,6 @@
 name: Micro TP
 main: br.com.eliti.kroltan.MicroTP.MicroTP
-version: 0.3b
+version: 0.4
 commands:
     tp: 
         description: Teleports to a player
@@ -32,4 +32,8 @@ commands:
         usage: /summon <name>
         permission: MicroTP.summon
         permission-message: You don't have permission to use this command
-    
+    spawn:
+        description: Moves you to the world's spawn
+        usage: /spawn
+        permission: MicroTP.spawn
+        permission-message: You don't have permission to use this command

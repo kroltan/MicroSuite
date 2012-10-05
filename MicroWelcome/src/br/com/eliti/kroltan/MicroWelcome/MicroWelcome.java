@@ -64,13 +64,14 @@ public class MicroWelcome extends JavaPlugin {
 	 * @param player The player to welcome
 	 */
 	public void Welcome(Player player) {
-		if (config.getString("motd.mode").equalsIgnoreCase("join")) {
+		if (motdMode.equalsIgnoreCase("join")) {
 			ShowMOTD(player, true);
 		}
 		TryGiveStartingItems(player);
 		if (config.getBoolean("login.enabled")) {
 			LoginBroadcast(player);
 		}
+		
 	}
 	
 	
@@ -166,5 +167,30 @@ public class MicroWelcome extends JavaPlugin {
 	public void SetLoginBroadcast(Player player, String message) {
 		config.set("login."+player.getName(), message);
 		saveConfig();
+	}
+	
+	/**
+	 * Sets the logout broadcast message of the specified player
+	 * @param player The player to set the broadcast
+	 * @param message The broadcast message
+	 */
+	public void SetLogoutBroadcast(Player player, String message) {
+		config.set("logout."+player.getName(), message);
+		saveConfig();
+	}
+	
+	/**
+	 * Broadcasts to all players the quit message of the specified player
+	 * @param player The player to inform
+	 */
+	public void GoodbyeBroadcast(Player player) {
+		if (config.getBoolean("logout.enabled")) {
+			if (config.contains("logout."+player.getName())) {
+				String message = config.getString("logout."+player.getName())
+						.replace("%SERVER%", server.getMotd()).replace("f:", "§").replace("%IP%", server.getIp()).replace("%HIM%", player.getDisplayName())
+						.replace("%CAP%", ""+server.getMaxPlayers()).replace("%PLAYERS%", ""+server.getOnlinePlayers().length);
+				server.broadcastMessage(message);
+			}
+		}
 	}
 }

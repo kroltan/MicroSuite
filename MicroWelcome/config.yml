@@ -39,6 +39,9 @@ rules:
 login:
     enabled: true
     Kroltan: f:2Welcome f:aKroltanf:2, the creator of f:aMicroSuitef:2!
+logout:
+    enabled: true
+    Kroltan: f:2Goodbye f:aKroltanf:2, the creator of f:aMicroSuitef:2!
 kit:
     enabled: true
     items:

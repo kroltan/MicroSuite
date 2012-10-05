@@ -1,6 +1,9 @@
 package br.com.eliti.kroltan.MicroAuth;
 
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -75,12 +78,12 @@ public class MicroAuth extends JavaPlugin {
 	 * @return
 	 */
 	public boolean Authorize(Player p, String password) {
-		if (password.equals(config.getString("users."+p.getName()+".password").replace("'", ""))) {
+		if (MD5(password).equals(config.getString("users."+p.getName()+".password").replace("'", ""))) {
 			p.setMetadata("authorized", new FixedMetadataValue(this, true));
 			p.sendMessage(MSG_HEADER+"You logged in successfully.");
 			return true;
 		} else {
-			p.sendMessage(MSG_HEADER+"Wrong password or arguments, please try again");
+			p.sendMessage(MSG_HEADER+"Wrong password or arguments, please try again "+MD5(password));
 			return false;
 		}
 	}
@@ -113,7 +116,7 @@ public class MicroAuth extends JavaPlugin {
 			if (!email.contains("@") || !email.contains(".")) {
 				return;
 			}
-			config.set("users."+username+".password", password);
+			config.set("users."+username+".password", MD5(password));
 			config.set("users."+username+".email", email);
 			saveConfig();
 			p.sendMessage(MSG_HEADER+"You were registered with email "+ChatColor.GOLD+email);
@@ -143,4 +146,21 @@ public class MicroAuth extends JavaPlugin {
 		return p.hasMetadata("authorized");
 	}
 	
+	private String MD5(String raw) {
+		try {
+			byte[] bytesOfMessage = raw.getBytes("UTF-8");
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] theDigest = md.digest(bytesOfMessage);
+			String result = "";
+			for (int i = theDigest.length-1; i > 0; i--) {
+				result = result + theDigest[i];
+			}
+			return result;
+		} catch (UnsupportedEncodingException e) {
+			logger.warning("Error hashing string: "+e.getMessage());
+		} catch (NoSuchAlgorithmException e) {
+			logger.warning("Error hashing string: "+e.getMessage());
+		}
+		return null;
+	}
 }
